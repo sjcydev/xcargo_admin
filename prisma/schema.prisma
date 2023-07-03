@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuarios {
+  id         Int      @id @default(autoincrement())
+  nombre     String
+  apellido   String
+  correo     String   @unique
+  cedula     String
+  telefono   String
+  nacimiento DateTime @db.Date
+  sexo       String
+}
+
+model AuthUser {
+  id               String        @id @unique
+  auth_session     AuthSession[]
+  auth_key         AuthKey[]
+  username         String        @unique
+  correo           String        @unique
+  nombre           String
+  apellido         String
+  password_updated Boolean       @default(false)
+
+  @@map("auth_user")
+}
+
+model AuthSession {
+  id             String   @id @unique
+  user_id        String
+  active_expires BigInt
+  idle_expires   BigInt
+  auth_user      AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@map("auth_session")
+}
+
+model AuthKey {
+  id              String   @id @unique
+  hashed_password String?
+  user_id         String
+  primary_key     Boolean
+  expires         BigInt?
+  auth_user       AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@map("auth_key")
+}
