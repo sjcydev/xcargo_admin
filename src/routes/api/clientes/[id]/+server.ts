@@ -1,4 +1,5 @@
 import type { RequestEvent } from "./$types";
+import { prisma } from "$lib/server/prisma";
 
 export const POST = async ({ request, params }: RequestEvent) => {
   const { usuario } = await request.json();
