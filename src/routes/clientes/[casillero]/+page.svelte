@@ -2,6 +2,7 @@
   import axios from "axios";
   import { toast } from "@zerodevx/svelte-toast";
   import type { Usuarios } from "@prisma/client";
+  import { goto } from "$app/navigation";
 
   export let data: { usuario: Usuarios };
   let usuario = {
@@ -16,13 +17,14 @@
   let registering = false;
   async function actulizarCasillero(event: Event) {
     registering = true;
-    if (typeof usuario.casillero === "string" && parseInt(usuario.casillero)) {
+    if (typeof usuario.casillero === "string" && Number(usuario.casillero)) {
       await axios
         .post(`/api/clientes/${usuario.id}`, { usuario })
         .then(({ data }) => {
           const { status, message } = data;
           toast.push(message, { classes: [status] });
           registering = false;
+          goto("/");
         })
         .catch(({ response }) => {
           registering = false;
