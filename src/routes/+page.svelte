@@ -2,6 +2,7 @@
   import type { Usuarios } from "@prisma/client";
   import { createSearchStore, searchHandler } from "$lib/stores/search";
   import { onDestroy } from "svelte";
+  import { goto } from "$app/navigation";
 
   export let data: { usuarios: Usuarios[] };
 
@@ -48,8 +49,11 @@ ${usuario.cedula} ${usuario.telefono} ${usuario.correo}`,
     </thead>
     <tbody>
       {#each $searchStore.filtered as usuario}
-        <tr class="hover:bg-base-200">
-          <th>{usuario.id}</th>
+        <tr
+          class="hover:bg-base-200 cursor-pointer"
+          on:click={() => goto(`/clientes/${usuario.casillero}`)}
+        >
+          <th>{usuario.casillero}</th>
           <td>{usuario.nombre} {usuario.apellido}</td>
           <td>{usuario.correo}</td>
           <td>{usuario.telefono}</td>

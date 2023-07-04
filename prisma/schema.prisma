@@ -16,17 +16,18 @@ model Usuarios {
   telefono   String
   nacimiento DateTime @db.Date
   sexo       String
+  casillero  Int?     @db.UnsignedInt
 }
 
 model AuthUser {
   id               String        @id @unique
-  auth_session     AuthSession[]
-  auth_key         AuthKey[]
   username         String        @unique
   correo           String        @unique
   nombre           String
   apellido         String
   password_updated Boolean       @default(false)
+  auth_key         AuthKey[]
+  auth_session     AuthSession[]
 
   @@map("auth_user")
 }
@@ -36,7 +37,7 @@ model AuthSession {
   user_id        String
   active_expires BigInt
   idle_expires   BigInt
-  auth_user      AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
+  auth_user      AuthUser @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([user_id])
   @@map("auth_session")
@@ -48,7 +49,7 @@ model AuthKey {
   user_id         String
   primary_key     Boolean
   expires         BigInt?
-  auth_user       AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
+  auth_user       AuthUser @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([user_id])
   @@map("auth_key")
