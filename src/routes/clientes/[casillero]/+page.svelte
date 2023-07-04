@@ -30,7 +30,7 @@
           toast.push(message, { classes: [status] });
         });
     } else {
-      toast.push("Casillero tiene que ser un numero entre 0 y 999");
+      toast.push("Casillero tiene que ser un numero");
       registering = false;
     }
   }
