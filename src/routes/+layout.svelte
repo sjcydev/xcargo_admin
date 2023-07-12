@@ -42,6 +42,7 @@
           </h1>
         </div>
         <li><a href="/">Clientes</a></li>
+        <li><a href="/factura">Facturar</a></li>
       </ul>
     </div>
   </div>
