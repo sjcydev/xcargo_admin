@@ -45,7 +45,9 @@
   let creating = false;
   async function crearFactura(event: Event) {
     if (info.trackings.length === 0) {
-      toast.push("No tienes numero de trackings añadidos");
+      toast.push("No tienes numero de trackings añadidos", {
+        classes: ["warning"],
+      });
     } else {
       creating = true;
       await axios
@@ -88,6 +90,11 @@
     form.reset();
     infoTracking.reset();
     infoTracking = infoTracking;
+  }
+
+  function deleteTracking(index: number) {
+    info.trackings.splice(index, 1);
+    info = info;
   }
 
   let timeout: ReturnType<typeof setTimeout>;
@@ -323,14 +330,18 @@
                 </tr>
               </thead>
               <tbody class="text-black">
-                {#each info.trackings as tracking}
+                {#each info.trackings as tracking, ind}
                   <tr>
                     <th>1</th>
                     <td class="w-full">{tracking.numero_tracking}</td>
                     <td class="w-full text-right">{tracking.peso}</td>
                     <td class="w-full text-right">${tracking.precio}</td>
                     <td class="w-auto text-right"
-                      ><button><Fa icon={faTrashCan} /></button></td
+                      ><button
+                        type="button"
+                        on:click={() => deleteTracking(ind)}
+                        ><Fa icon={faTrashCan} /></button
+                      ></td
                     >
                   </tr>
                 {/each}
