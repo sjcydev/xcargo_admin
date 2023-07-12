@@ -24,7 +24,7 @@
     reset: function () {
       this.numero_tracking = "";
       this.peso = 1;
-      this.precio = precioBase;
+      this.precio = this.base;
     },
   };
 
