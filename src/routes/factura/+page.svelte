@@ -260,9 +260,13 @@
                         class="input input-bordered
         input-secondary"
                         bind:value={infoTracking.peso}
-                        on:input={() =>
-                          (infoTracking.precio =
-                            infoTracking.base * infoTracking.peso)}
+                        on:input={() => {
+                          infoTracking.precio =
+                            infoTracking.base * infoTracking.peso;
+                          infoTracking.precio = Number(
+                            infoTracking.precio.toFixed(2)
+                          );
+                        }}
                         required
                       />
                     </div>
@@ -290,9 +294,13 @@
         input-secondary"
                         bind:value={infoTracking.base}
                         disabled={!especial}
-                        on:input={() =>
-                          (infoTracking.precio =
-                            infoTracking.base * infoTracking.peso)}
+                        on:input={() => {
+                          infoTracking.precio =
+                            infoTracking.base * infoTracking.peso;
+                          infoTracking.precio = Number(
+                            infoTracking.precio.toFixed(2)
+                          );
+                        }}
                       />
                     </div>
                     <div class="form-control mt-2">
