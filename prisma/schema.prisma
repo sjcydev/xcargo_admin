@@ -8,15 +8,34 @@ datasource db {
 }
 
 model Usuarios {
-  id         Int      @id @default(autoincrement())
+  id         Int        @id @default(autoincrement())
   nombre     String
   apellido   String
-  correo     String   @unique
+  correo     String     @unique
   cedula     String
   telefono   String
-  nacimiento DateTime @db.Date
+  nacimiento DateTime   @db.Date
   sexo       String
-  casillero  Int?     @db.UnsignedInt
+  casillero  Int?       @db.UnsignedInt
+  facturas   Facturas[]
+}
+
+model Facturas {
+  factura_id Int         @id @default(autoincrement())
+  casillero  Int
+  fecha      String
+  Usuarios   Usuarios    @relation(fields: [casillero], references: [id])
+  trackings  Trackings[]
+}
+
+model Trackings {
+  tracking_id     Int      @id @default(autoincrement())
+  factura_id      Int
+  factura         Facturas @relation(fields: [factura_id], references: [factura_id])
+  numero_tracking String
+  peso            Int
+  base            Float
+  precio          Float
 }
 
 model AuthUser {
