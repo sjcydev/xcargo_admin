@@ -47,6 +47,9 @@ export const POST = async ({ request }: RequestEvent) => {
           {
             email: cliente.correo,
           },
+          {
+            email: "xcargoservices68@gmail.com",
+          },
         ],
         subject: "Tienes paquetes listo para retirar!",
         htmlContent: html,
