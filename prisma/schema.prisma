@@ -25,8 +25,9 @@ model Facturas {
   casillero  Int
   fecha      String
   pagado     Boolean     @default(false)
-  Usuarios   Usuarios    @relation(fields: [casillero], references: [id])
+  cliente    Usuarios    @relation(fields: [casillero], references: [id])
   trackings  Trackings[]
+  total      Float       @default(0) @db.Float
 
   @@index([casillero], map: "Facturas_casillero_fkey")
 }

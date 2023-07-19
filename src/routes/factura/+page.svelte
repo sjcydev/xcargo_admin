@@ -50,8 +50,13 @@
       });
     } else {
       creating = true;
+      let totalSum = 0;
+      info.trackings.forEach((tracking) => {
+        totalSum += tracking.precio;
+      });
+      let total = Number(totalSum.toFixed(2));
       await axios
-        .post("/api/facturas/crear", { info, id: cliente.id })
+        .post("/api/facturas/crear", { info, id: cliente.id, total })
         .then(async ({ data }) => {
           const { status, message, factura_id } = data;
 
