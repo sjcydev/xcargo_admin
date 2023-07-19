@@ -84,6 +84,7 @@
     const tracking = { ...infoTracking };
     tracking.base = Number(tracking.base);
     tracking.peso = Number(tracking.peso);
+    tracking.precio = Number(tracking.precio);
     info.trackings.push(tracking);
     info.trackings = info.trackings;
     const form = event.target as HTMLFormElement;
