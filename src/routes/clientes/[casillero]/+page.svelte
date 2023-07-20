@@ -17,7 +17,10 @@
   let registering = false;
   async function actulizarCasillero(event: Event) {
     registering = true;
-    if (typeof usuario.casillero === "string" && Number(usuario.casillero)) {
+    if (
+      (typeof usuario.casillero === "string" && Number(usuario.casillero)) ||
+      usuario.casillero === data.usuario.casillero
+    ) {
       await axios
         .post(`/api/clientes/${usuario.id}`, { usuario })
         .then(({ data }) => {
