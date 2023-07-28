@@ -44,6 +44,7 @@
         <li><a href="/">Clientes</a></li>
         <li><a href="/facturar">Facturar</a></li>
         <li><a href="/facturas">Ver Facturas</a></li>
+        <li><a href="/tracking">Tracking Interno</a></li>
       </ul>
     </div>
   </div>
