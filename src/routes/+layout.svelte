@@ -42,7 +42,8 @@
           </h1>
         </div>
         <li><a href="/">Clientes</a></li>
-        <li><a href="/factura">Facturar</a></li>
+        <li><a href="/facturar">Facturar</a></li>
+        <li><a href="/facturas">Ver Facturas</a></li>
       </ul>
     </div>
   </div>

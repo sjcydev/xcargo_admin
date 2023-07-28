@@ -11,6 +11,7 @@ declare global {
     // interface PageData {}
     // interface Platform {}
   }
+
   interface Registro {
     nombre: string;
     apellido: string;
@@ -25,13 +26,13 @@ declare global {
     peso: number;
     base: number;
     precio: number;
-    reset: Function;
+    reset?: Function;
   };
 
   type Factura = {
-    casillero: string;
+    casillero: string | number;
     trackings: Trackings[];
-    reset: Function;
+    reset?: Function;
   };
 
   type Cliente = {
@@ -39,6 +40,16 @@ declare global {
     nombre: string;
     apellido: string;
     correo: string;
+  };
+
+  type VerFacturas = {
+    factura_id: number;
+    casillero: number;
+    cliente: Usuarios;
+    fecha: string;
+    pagado: boolean;
+    total: number;
+    trackings: Trackings[];
   };
 }
 
