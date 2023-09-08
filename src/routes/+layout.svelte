@@ -3,6 +3,7 @@
   import "../app.css";
   import { SvelteToast } from "@zerodevx/svelte-toast";
   import Fa from "svelte-fa";
+  import { navigating } from "$app/stores";
   import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 
   let options = {
@@ -23,7 +24,11 @@
   <div class="drawer lg:drawer-open">
     <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content flex flex-col items-center justify-center">
-      <slot />
+      {#if $navigating}
+        <span class="loading loading-infinity text-secondary w-20" />
+      {:else}
+        <slot />
+      {/if}
       <!-- <label for="my-drawer-2" class="btn btn-primary drawer-button lg:hidden">Open drawer</label> -->
     </div>
     <div class="drawer-side">
