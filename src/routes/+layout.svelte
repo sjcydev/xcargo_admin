@@ -19,7 +19,15 @@
 
 <SvelteToast {options} />
 {#if protectedRoutes.has($page.url.pathname)}
-  <slot />
+  {#if $navigating}
+    <div class="hero min-h-screen bg-base-200">
+      <div class="hero-content w-full max-w-sm flex-col">
+        <span class="loading loading-infinity text-secondary w-20" />
+      </div>
+    </div>
+  {:else}
+    <slot />
+  {/if}
 {:else}
   <div class="drawer lg:drawer-open">
     <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
@@ -40,7 +48,7 @@
         place-items-center"
           >
             Menu <form method="POST">
-              <button type="submit" formaction="?/logout"
+              <button type="submit" formaction="/?/logout"
                 ><Fa icon={faRightFromBracket} /></button
               >
             </form>
