@@ -102,8 +102,8 @@
         name="sucursal"
         required
       >
-        <option selected value="Chorrera">Chorrera</option>
-        <option value="Panamá">Panamá</option>
+        <option selected value="Chorrera">La Chorrera</option>
+        <option value="Dos Mares">Dos Mares</option>
       </select>
     </div>
 
