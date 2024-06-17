@@ -28,7 +28,7 @@ export const load: PageServerLoad = async ({ locals }) => {
   const usuarios = prisma.usuarios.findMany({
     orderBy: [
       {
-        casillero: "asc",
+        casillero: "desc",
       },
     ],
   });

@@ -1,9 +1,10 @@
 import type { RequestEvent } from "./$types";
 import { prisma } from "$lib/server/prisma";
+import { getToday, dateToLocaleString } from "$lib/utils/datehandler";
 
 export const POST = async ({ request }: RequestEvent) => {
   const { info, id, total } = await request.json();
-  const fecha = new Date().toLocaleDateString("en-GB");
+  const fecha = dateToLocaleString(getToday());
 
   const factura = await prisma.facturas.create({
     data: {
@@ -14,13 +15,16 @@ export const POST = async ({ request }: RequestEvent) => {
       fecha,
       total,
     },
+    include: {
+      trackings: true,
+    },
   });
 
   return new Response(
     JSON.stringify({
       message: "Factura Creada",
       status: "success",
-      factura_id: factura.factura_id,
+      factura,
     }),
     {
       headers: { "Content-Type": "application/json" },

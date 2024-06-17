@@ -1,50 +1,54 @@
 <script lang="ts">
-  // import { validateUser } from '$lib/utils/form-checker';
-  import axios from "axios";
+  import { applyAction, enhance } from "$app/forms";
   import { toast } from "@zerodevx/svelte-toast";
-
-  let usuario = {
-    nombre: "",
-    apellido: "",
-    username: "",
-    correo: "",
-    codigo: "",
-    reset: function () {
-      this.nombre = "";
-      this.apellido = "";
-      this.username = "";
-      this.correo = "";
-      this.codigo = "";
-    },
-  };
+  import type { SubmitFunction } from "@sveltejs/kit";
+  import BackButton from "$lib/components/BackButton.svelte";
 
   let registering = false;
-  async function crearUsuario(event: Event) {
+  export let data;
+
+  const signup: SubmitFunction = () => {
     registering = true;
-    axios
-      .post("/api/auth/signup", { usuario })
-      .then(({ data }) => {
-        const { status, message } = data;
-        toast.push(message, { classes: [status] });
-        const form = event.target as HTMLFormElement;
-        form.reset();
-        usuario.reset();
-        registering = false;
-      })
-      .catch(({ response }) => {
-        registering = false;
-        const { status, message } = response.data;
-        toast.push(message, { classes: [status] });
-      });
-  }
+
+    return async ({ result }) => {
+      registering = false;
+
+      if (result.type === "success" || result.type === "redirect") {
+        toast.push("Usuario registrado exitosamente!", {
+          classes: ["success"],
+        });
+        await applyAction(result);
+      }
+
+      if (result.type === "failure") {
+        if (result?.data?.errors.correo_registrado) {
+          toast.push("Correo ya esta registrado!", { classes: ["warning"] });
+        }
+
+        if (result?.data?.errors.codigo_invalido) {
+          toast.push("Codigo secreto invalido", { classes: ["warning"] });
+        }
+
+        if (result?.data?.errors.register_fail) {
+          toast.push("Nombre de usuario ya esta registrado!", {
+            classes: ["warning"],
+          });
+        }
+      }
+    };
+  };
 </script>
+
+{#if data?.user?.rol === "ADMIN"}
+  <BackButton />
+{/if}
 
 <div class="hero min-h-screen bg-base-200">
   <div class="hero-content flex-col max-w-md lg:max-w-lg w-full">
     <form
       class="card flex-shrink-0 shadow-2xl w-full bg-base-100"
       method="POST"
-      on:submit|preventDefault={(e) => crearUsuario(e)}
+      use:enhance={signup}
     >
       <div class="card-body">
         <h1
@@ -62,7 +66,7 @@
               placeholder="Nombre"
               class="input input-bordered
         input-secondary w-full"
-              bind:value={usuario.nombre}
+              name="nombre"
               required
             />
           </div>
@@ -72,7 +76,7 @@
               placeholder="Apellido"
               class="input input-bordered
         input-secondary w-full"
-              bind:value={usuario.apellido}
+              name="apellido"
               required
             />
           </div>
@@ -83,7 +87,7 @@
             placeholder="Username"
             class="input input-bordered
         input-secondary"
-            bind:value={usuario.username}
+            name="username"
             required
           />
         </div>
@@ -93,17 +97,34 @@
             placeholder="Correo"
             class="input input-bordered
         input-secondary"
-            bind:value={usuario.correo}
+            name="correo"
             required
           />
         </div>
+        {#if data?.user?.rol === "ADMIN"}
+          <input type="hidden" value="ADMIN_y" name="admin_control" />
+          <div class="form-control w-full">
+            <p class="label">
+              <span class="label-text">Rol</span>
+            </p>
+            <select
+              class="select select-secondary select-bordered w-full font-medium"
+              name="rol"
+            >
+              <option disabled selected value="">Rol</option>
+              <option value="ADMIN">Administrador</option>
+              <option value="SECRETARIA">Secretaria</option>
+              <option value="EMPLEADO">Empleado</option>
+            </select>
+          </div>
+        {/if}
         <div class="form-control mt-3 lg:mt-4">
           <input
             type="password"
             placeholder="Codigo Secreto"
             class="input input-bordered
         input-secondary"
-            bind:value={usuario.codigo}
+            name="codigo"
             required
           />
         </div>

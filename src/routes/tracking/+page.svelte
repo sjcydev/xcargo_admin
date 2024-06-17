@@ -2,12 +2,11 @@
   import axios from "axios";
   import Fa from "svelte-fa";
   import {
-    faDownload,
     faCircleCheck,
     faCircleXmark,
   } from "@fortawesome/free-solid-svg-icons";
-  import { createInvoice } from "$lib/utils/createpdf";
   import type { Facturas, Trackings, Usuarios } from "@prisma/client";
+  import { goto } from "$app/navigation";
 
   type TrackingInterno = {
     factura: Facturas & { cliente: Usuarios; trackings: Trackings[] };
@@ -90,11 +89,15 @@
                 <th class="text-right">Peso (lbs)</th>
                 <th class="text-right">Precio Total</th>
                 <th>Pagado</th>
-                <th />
+                <th>Retirado</th>
               </tr>
             </thead>
             <tbody class="text-black">
-              <tr>
+              <tr
+                class="cursor-pointer hover:bg-base-200"
+                on:click={() =>
+                  goto(`/facturas/${tracking.factura.factura_id}`)}
+              >
                 <td>{tracking.factura.fecha}</td>
                 <td>{tracking.factura.factura_id}</td>
                 <th>{tracking.factura.cliente.casillero}</th>
@@ -112,18 +115,13 @@
                     <Fa class="text-red-500 mx-auto" icon={faCircleXmark} />
                   {/if}
                 </td>
-                <td class="text-right whitespace-nowrap w-1"
-                  ><button
-                    type="button"
-                    on:click={() =>
-                      createInvoice(
-                        tracking.factura,
-                        tracking.factura_id,
-                        tracking.factura.cliente,
-                        true
-                      )}><Fa icon={faDownload} /></button
-                  ></td
-                >
+                <td class="text-lg whitespace-nowrap w-1">
+                  {#if tracking.retirado}
+                    <Fa class="text-green-500 mx-auto" icon={faCircleCheck} />
+                  {:else}
+                    <Fa class="text-red-500 mx-auto" icon={faCircleXmark} />
+                  {/if}
+                </td>
               </tr>
             </tbody>
           </table>

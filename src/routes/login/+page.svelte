@@ -1,35 +1,39 @@
 <script lang="ts">
-  import axios from "axios";
   import { toast } from "@zerodevx/svelte-toast";
-  import { goto } from "$app/navigation";
-
-  let username = "";
-  let password = "";
+  import Logo from "$lib/assets/fullLogoNegro.png";
+  import { applyAction, enhance } from "$app/forms";
+  import type { SubmitFunction } from "@sveltejs/kit";
 
   let loading = false;
-  async function iniciarUsuario(event: Event) {
+  const login: SubmitFunction = () => {
     loading = true;
-    axios
-      .post("/api/auth/login", { username, password })
-      .then(({ data }) => {
-        goto("/");
-        const { status, message } = data;
-        toast.push(message, { classes: [status] });
 
-        const form = event.target as HTMLFormElement;
-        form.reset();
+    return async ({ result }) => {
+      loading = false;
 
-        username = "";
-        password = "";
+      if (result.type === "success" || result.type === "redirect") {
+        await applyAction(result);
+      }
 
-        loading = false;
-      })
-      .catch(({ response }) => {
-        loading = false;
-        const { status, message } = response.data;
-        toast.push(message, { classes: [status] });
-      });
-  }
+      if (result.type === "failure") {
+        if (result?.data?.errors?.username) {
+          toast.push("Nombre de usuario es requerido", {
+            classes: ["warning"],
+          });
+        }
+
+        if (result?.data?.errors?.password) {
+          toast.push("Contraseña es requerida", { classes: ["warning"] });
+        }
+
+        if (result?.data?.errors?.auth_fail) {
+          toast.push("Usuario o Contraseña Incorrecta", {
+            classes: ["warning"],
+          });
+        }
+      }
+    };
+  };
 </script>
 
 <svelte:head>
@@ -37,11 +41,12 @@
 </svelte:head>
 
 <div class="hero min-h-screen bg-base-200">
-  <div class="hero-content w-full max-w-sm">
+  <div class="hero-content w-full max-w-sm flex-col">
+    <img src={Logo} alt="logo" class="w-4/6 mb-5" />
     <form
       class="card flex-shrink-0 w-full shadow-2xl bg-base-100"
       method="POST"
-      on:submit|preventDefault={(e) => iniciarUsuario(e)}
+      use:enhance={login}
     >
       <div class="card-body">
         <h1
@@ -55,8 +60,7 @@
             placeholder="Nombre de Usuario"
             class="input input-bordered
         input-secondary"
-            bind:value={username}
-            required
+            name="username"
           />
         </div>
         <div class="form-control mt-3 lg:mt-4">
@@ -65,8 +69,7 @@
             placeholder="Contraseña"
             class="input input-bordered
         input-secondary"
-            bind:value={password}
-            required
+            name="password"
           />
         </div>
         <div class="form-control mt-6">

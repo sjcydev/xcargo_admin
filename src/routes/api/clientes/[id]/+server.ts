@@ -20,19 +20,30 @@ export const GET = async ({ params }: RequestEvent) => {
       cliente,
     }),
     {
-      headers: { "Content-Type": "application/json", Location: "/" },
+      headers: { "Content-Type": "application/json" },
       status: 200,
     }
   );
 };
 export const POST = async ({ request, params }: RequestEvent) => {
   const { usuario } = await request.json();
-  let { nombre, apellido, casillero, correo, telefono } = usuario;
+  let {
+    nombre,
+    apellido,
+    casillero,
+    correo,
+    telefono,
+    precio,
+    cedula,
+    tipo,
+    codigo,
+    sucursal,
+  } = usuario;
 
   casillero = parseInt(casillero);
 
   try {
-    const updatedCliente = await prisma.usuarios.update({
+    await prisma.usuarios.update({
       where: {
         id: parseInt(params.id),
       },
@@ -42,6 +53,11 @@ export const POST = async ({ request, params }: RequestEvent) => {
         apellido,
         correo,
         telefono,
+        cedula,
+        tipo,
+        codigo,
+        precio: Number(precio),
+        sucursal,
       },
     });
   } catch (err) {

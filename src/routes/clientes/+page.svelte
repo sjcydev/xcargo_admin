@@ -13,7 +13,7 @@
   const searchUsuarios = data.usuarios.map((usuario: Usuarios) => ({
     ...usuario,
     searchTerm: `${usuario.nombre} ${usuario.apellido}
-${usuario.cedula} ${usuario.telefono} ${usuario.correo} ${usuario.casillero} ${usuario.codigo} ${usuario.compania}`,
+${usuario.cedula} ${usuario.telefono} ${usuario.correo} ${usuario.casillero}`,
   }));
 
   const searchStore = createSearchStore(searchUsuarios);
@@ -70,7 +70,6 @@ ${usuario.cedula} ${usuario.telefono} ${usuario.correo} ${usuario.casillero} ${u
         <th>Correo</th>
         <th>Telefono</th>
         <th>Identificación</th>
-        <th>Sucursal</th>
         <th>Sexo</th>
       </tr>
     </thead>
@@ -85,7 +84,6 @@ ${usuario.cedula} ${usuario.telefono} ${usuario.correo} ${usuario.casillero} ${u
           <td>{usuario.correo}</td>
           <td>{usuario.telefono}</td>
           <td>{usuario.cedula}</td>
-          <td>{usuario.sucursal}</td>
           <td>{usuario.sexo}</td>
         </tr>
       {/each}
@@ -97,7 +95,6 @@ ${usuario.cedula} ${usuario.telefono} ${usuario.correo} ${usuario.casillero} ${u
         <th>Correo</th>
         <th>Telefono</th>
         <th>Identificación</th>
-        <th>Sucursal</th>
         <th>Sexo</th>
       </tr>
     </tfoot>

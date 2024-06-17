@@ -7,13 +7,38 @@ const auth_handle: Handle = async ({ event, resolve }) => {
     event.url.pathname.startsWith("/facturar") ||
     event.url.pathname.startsWith("/facturas") ||
     event.url.pathname.startsWith("/tracking") ||
-    event.url.pathname.startsWith("/password_update") ||
+    event.url.pathname.startsWith("/registrar_cliente") ||
     event.url.pathname.startsWith("/clientes");
 
   const { user } = await event.locals.auth.validateUser();
+
+  if (event.url.pathname === "/registrar" && user) {
+    if (user?.rol !== "ADMIN") {
+      throw redirect(303, "/");
+    }
+  }
+
+  if (event.url.pathname.startsWith("/reportes") && user) {
+    if (user?.rol === "EMPLEADO") {
+      throw redirect(303, "/");
+    }
+  }
+
+  if (
+    event.url.pathname === "/password_updated" &&
+    user &&
+    user.password_updated
+  ) {
+    throw redirect(303, "/");
+  }
+
   if (protected_urls) {
     if (!user) {
       throw redirect(303, "/login");
+    }
+
+    if (!user.password_updated) {
+      throw redirect(303, "/password_update");
     }
   }
 

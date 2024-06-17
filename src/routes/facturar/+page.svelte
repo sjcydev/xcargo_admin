@@ -8,13 +8,9 @@
   let info: Factura = {
     casillero: "",
     trackings: [],
-    reset: function () {
-      this.casillero = "";
-      this.trackings = [];
-    },
   };
 
-  const precioBase = 2.5;
+  const precioBase = 2.75;
 
   let infoTracking = {
     numero_tracking: "",
@@ -33,6 +29,8 @@
     nombre: "",
     apellido: "",
     correo: "",
+    precio: 2.75,
+    telefono: "",
   };
 
   function resetCliente() {
@@ -40,6 +38,13 @@
     cliente.nombre = "";
     cliente.apellido = "";
     cliente.correo = "";
+    cliente.precio = 2.75;
+    cliente.telefono = "";
+  }
+
+  function resetInfo() {
+    info.casillero = "";
+    info.trackings = [];
   }
 
   let creating = false;
@@ -58,12 +63,17 @@
       await axios
         .post("/api/facturas/crear", { info, id: cliente.id, total })
         .then(async ({ data }) => {
-          const { status, message, factura_id } = data;
+          const { status, message, factura } = data;
 
-          let pdf = await createInvoice(info, factura_id, cliente);
+          let pdf = await createInvoice(info, factura.factura_id, cliente);
 
           axios
-            .post("/api/emails/facturar", { info, cliente, factura_id, pdf })
+            .post("/api/emails/facturar", {
+              info,
+              cliente,
+              factura_id: factura.factura_id,
+              pdf,
+            })
             .then(({ data }) => {
               toast.push(data.message, { classes: [data.status] });
             });
@@ -71,7 +81,7 @@
           toast.push(message, { classes: [status] });
           const form = event.target as HTMLFormElement;
           form.reset();
-          info.reset();
+          resetInfo();
           resetCliente();
           creating = false;
         })
@@ -104,29 +114,49 @@
   }
 
   let timeout: ReturnType<typeof setTimeout>;
+let searching = false;
 
-  let searching = false;
-  function handleCasilleroChange() {
-    clearTimeout(timeout);
-    timeout = setTimeout(async () => {
-      const casillero = parseInt(info.casillero) || "";
-      if (String(casillero).length > 0) {
-        searching = true;
-        await axios.get(`/api/clientes/${casillero}`).then(({ data }) => {
-          if (data.cliente) {
-            cliente = data.cliente;
-          } else {
-            resetCliente();
-            info.reset();
-          }
-          searching = false;
-        });
-      } else {
-        resetCliente();
-        info.reset();
-      }
-    }, 500);
+function handleCasilleroChange() {
+  clearTimeout(timeout);
+  timeout = setTimeout(async () => {
+    const casillero = info.casillero as string;
+    if (casillero.length === 0) {
+      resetCliente();
+      resetInfo();
+      return;
+    }
+
+    searching = true;
+    const url = /\d/.test(casillero) ? `/api/clientes/${casillero}` : `/api/corporativo/${casillero}`;
+    
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      processClienteData(data);
+    } catch (error) {
+      console.error('Error fetching client data:', error);
+    } finally {
+      searching = false;
+    }
+  }, 1500);
+}
+
+function processClienteData(data: any) {
+  if (data.cliente) {
+    cliente = data.cliente;
+    especial = cliente.precio !== precioBase;
+    infoTracking.base = cliente.precio;
+    infoTracking.precio = infoTracking.base;
+  } else {
+    resetCliente();
+    resetInfo();
   }
+}
+
+  const handlePriceChange = () => {
+    infoTracking.precio = infoTracking.base * infoTracking.peso;
+    infoTracking.precio = Number(infoTracking.precio.toFixed(2));
+  };
 </script>
 
 <svelte:head>
@@ -220,7 +250,7 @@
                     infoTracking.base = precioBase;
                     infoTracking.precio = infoTracking.base;
                   }}
-                  checked
+                  checked={!especial}
                 />
                 <span class="label-text ml-2">Cliente Casillero</span>
               </label>
@@ -232,6 +262,7 @@
                   name="tipo"
                   class="radio radio-secondary"
                   on:click={() => (especial = true)}
+                  checked={especial}
                 />
                 <span class="label-text ml-2">Cliente Precio Especial</span>
               </label>
@@ -267,13 +298,7 @@
                         class="input input-bordered
         input-secondary"
                         bind:value={infoTracking.peso}
-                        on:input={() => {
-                          infoTracking.precio =
-                            infoTracking.base * infoTracking.peso;
-                          infoTracking.precio = Number(
-                            infoTracking.precio.toFixed(2)
-                          );
-                        }}
+                        on:input={handlePriceChange}
                         required
                       />
                     </div>
@@ -301,13 +326,7 @@
         input-secondary"
                         bind:value={infoTracking.base}
                         disabled={!especial}
-                        on:input={() => {
-                          infoTracking.precio =
-                            infoTracking.base * infoTracking.peso;
-                          infoTracking.precio = Number(
-                            infoTracking.precio.toFixed(2)
-                          );
-                        }}
+                        on:input={handlePriceChange}
                       />
                     </div>
                     <div class="form-control mt-2">

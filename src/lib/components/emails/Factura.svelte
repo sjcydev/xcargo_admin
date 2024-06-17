@@ -20,10 +20,17 @@
   export let nombre: String;
   export let casillero: String;
   export let trackings: Trackings[];
+  export let sucursal: string;
 
   let ubicacion =
-    "La Chorrera, Barrio Balboa, Ave Ricardo J. Alfaro (Calle Rockefeller), Pb Autoservicio Mario";
+    "La Chorrera, La Mata del Coco, Local N˚2, al lado del S/M Casa Don Pepe";
   let maps = "https://maps.app.goo.gl/6umy2Deq1bqTzmZT6?g_st=ic";
+
+  if (sucursal === "Dos Mares") {
+    ubicacion =
+      "El Dorado, Dos Mares, Calle circunvalacion PH Elite 500 local 2, dentro de 'Baixing Market'";
+    maps = "https://maps.app.goo.gl/C5qxngYvcqh9Vaa88";
+  }
 
   const fontFamily =
     '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif';
