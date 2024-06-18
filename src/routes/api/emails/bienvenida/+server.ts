@@ -42,15 +42,15 @@ export const POST = async ({ request }: RequestEvent) => {
     await sibAPI
       .sendTransacEmail({
         sender: {
-          email: "info@qualitycargoservices.com",
-          name: "Quality Cargo Services",
+          email: "info@xcargoservices.com",
+          name: "XCargoServices",
         },
         to: [
           {
             email: correo,
           },
         ],
-        subject: "Bienvenido a Quality Cargo Services",
+        subject: "Bienvenido a XCargoServices",
         htmlContent: html,
         textContent: text,
       })
@@ -93,12 +93,17 @@ export const POST = async ({ request }: RequestEvent) => {
       },
     });
 
+    let adminEmail = "xcargopty@gmail.com";
+    if (sucursal === "Dos Mares") {
+      adminEmail = "xcargoadminpty@gmail.com";
+    }
+
     await sibAPI.sendTransacEmail({
       sender: {
-        email: "info@qualitycargoservices.com",
-        name: "Quality Cargo Services",
+        email: adminEmail,
+        name: "XCargoServices",
       },
-      to: [{ email: "info@qualitycargoservices.com" }],
+      to: [{ email: "info@xcargoservices.com" }],
       subject: "Nuevo Casillero Registrado",
       htmlContent: admin,
       textContent: textAdmin,

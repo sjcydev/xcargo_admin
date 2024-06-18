@@ -59,8 +59,8 @@ export const actions: Actions = {
       await sibAPI
         .sendTransacEmail({
           sender: {
-            email: "info@qualitycargoservices.com",
-            name: "QualityCargoServices",
+            email: "info@xcargoservices.com",
+            name: "XCargoServices",
           },
           to: [
             {

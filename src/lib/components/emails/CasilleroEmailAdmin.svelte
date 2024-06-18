@@ -103,7 +103,7 @@
           width="30"
           height="30"
           style={logoIcon}
-          alt="Quality Cargo Services Logo"
+          alt="XCargoServices Logo"
         />
       </Container>
       <Heading style={heading}>Nuevo Casillero Registrado</Heading>

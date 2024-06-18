@@ -68,8 +68,8 @@
         name="sucursal"
         required
       >
-        <option selected value="Dos Mares Dorado">Dos Mares Dorado</option>
-        <option value="Bethania">Bethania</option>
+        <option selected value="Chorrera">La Chorrera</option>
+        <option value="Dos Mares">Dos Mares</option>
       </select>
     </div>
     <div class="form-control mt-3 lg:mt-4">

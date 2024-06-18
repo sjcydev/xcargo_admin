@@ -42,8 +42,8 @@ export const POST = async ({ request }: RequestEvent) => {
     await sibAPI
       .sendTransacEmail({
         sender: {
-          email: "facturas@qualitycargoservices.com",
-          name: "Facturación Quality Cargo Services",
+          email: "facturas@xcargoservices.com",
+          name: "Facturación XCargoServices",
         },
         to: [
           {
