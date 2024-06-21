@@ -39,7 +39,7 @@ model Usuarios {
   compania   String?
   nacimiento DateTime      @default(now())
   sexo       String        @default("otros")
-  precio     Float         @default(2.50)
+  precio     Float         @default(2.75)
   casillero  Int?          @db.UnsignedInt
   tipo       TipoDeCliente @default(REGULAR)
   createdAt  DateTime      @default(now())

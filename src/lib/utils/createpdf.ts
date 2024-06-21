@@ -232,13 +232,12 @@ export async function createInvoice(
 
   autoTable(doc, {
     didDrawPage: function (data) {
-      let numero = "+507 6396-0009";
+      let numero = "+507 6362-8879";
       let direccion =
         "La Chorrera, La Mata del Coco, Local No. 2, al lado de Servicentro Pepe";
 
       if ((cliente as Usuarios).sucursal === "Dos Mares") {
         numero = "+507 6396-0009";
-        // 6394-2200
         direccion =
           "El Dorado, Dos Mares, Calle circunvalacion PH Elite 500 local 2, dentro de 'Baixing Market'";
       }
